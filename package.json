@@ -6,7 +6,7 @@
   "description": "The core package for buidling fusion games",
   "keywords": [
     "FusionGame",
-    "Game",
+    "Game"
   ],
   "category": "Core",
   "dependencies": {
