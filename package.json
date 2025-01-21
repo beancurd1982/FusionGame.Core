@@ -1,0 +1,22 @@
+{
+  "name": "com.fusiongame.core",
+  "displayName": "FusionGame.Core",
+  "version": "1.0.0",
+  "unity": "2020.3",
+  "description": "The core package for buidling fusion games",
+  "keywords": [
+    "FusionGame",
+    "Game",
+  ],
+  "category": "Core",
+  "dependencies": {
+  },
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/com.unity.textmeshpro.git",
+    "type": "git",
+    "revision": "01e57e3b7de18af9dfe9baaa0a0ff5cc4765c899"
+  },
+  "upmCi": {
+    "footprint": "bfe9ad7192cdd29486fc5980b5ac7d0b3fafcec6"
+  }
+}
