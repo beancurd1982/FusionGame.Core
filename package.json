@@ -1,7 +1,7 @@
 {
   "name": "com.fusiongame.core",
   "displayName": "FusionGame.Core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "unity": "2020.3",
   "description": "The core package for buidling fusion games",
   "keywords": [
@@ -18,5 +18,12 @@
   },
   "upmCi": {
     "footprint": "bfe9ad7192cdd29486fc5980b5ac7d0b3fafcec6"
-  }
+  },
+  "samples": [
+        {
+            "displayName": "Basic",
+            "description": "Basic example",
+            "path": "Samples~/Basic"
+        }
+    ]
 }
