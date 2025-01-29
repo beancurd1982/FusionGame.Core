@@ -23,5 +23,10 @@ namespace FusionGame.Core.Data
                 OnValueChanged?.Invoke(value);
             }
         }
+
+        public AtomicDataProperty(T initialValue = default)
+        {
+            value = initialValue;
+        }
     }
 }
