@@ -46,7 +46,7 @@ namespace FusionGame.Core.Layout
                 throw new NullReferenceException($"Transition item at index {itemIndex} is null.");
             }
 
-            target.DoTransition(target.CurrentView, toViewType, 1f, null);
+            target.StartTransition(target.CurrentView, toViewType, 1f, null);
         }
     }
 
