@@ -11,6 +11,9 @@ namespace FusionGame.Core.Layout
     /// <typeparam name="T">The enum type representing different views in the system.</typeparam>
     public interface ITransition<T> where T : Enum
     {
+        //TODO: see if we need this flag to tell if this component is currently on screen
+        //bool IsOnScreen { get; }
+
         /// <summary>
         /// Gets the current active view in the transition system.
         /// Represents the last fully completed view before a transition.

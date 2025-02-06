@@ -15,13 +15,13 @@ namespace FusionGame.Core.Layout
         /// A collection of transition items that handle view transitions.
         /// Each item in this list must implement the <see cref="ITransition{T}"/> interface.
         /// </summary>
-        private readonly List<ITransition<T>> items = new List<ITransition<T>>();
+        private readonly List<TransitionRoot<T>> items = new List<TransitionRoot<T>>();
 
         /// <summary>
         /// Adds a transition item to the controller.
         /// </summary>
         /// <param name="item">The transition item to add. Must implement <see cref="ITransition{T}"/>.</param>
-        public void AddTransitionItem(ITransition<T> item)
+        public void AddTransitionItem(TransitionRoot<T> item)
         {
             items.Add(item);
         }
@@ -46,7 +46,10 @@ namespace FusionGame.Core.Layout
                 throw new NullReferenceException($"Transition item at index {itemIndex} is null.");
             }
 
-            target.StartTransition(target.CurrentView, toViewType, 1f, null);
+            if (!target.InTransition)
+            {
+                target.StartTransition(target.CurrentView, toViewType, 1f, null);
+            }
         }
     }
 
