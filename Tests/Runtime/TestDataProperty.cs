@@ -48,7 +48,7 @@ namespace FusionGame.Core.RuntimeTests
             var myDataClass = new TableData();
 
             // Assert
-            Assert.AreEqual("Initial Value", myDataClass.TableTitle.Value);
+            Assert.AreEqual("Initial table title", myDataClass.TableTitle.Value);
         }
 
         [Test]
@@ -62,6 +62,16 @@ namespace FusionGame.Core.RuntimeTests
 
             // Assert
             Assert.IsTrue(myDataClass.IsLiveDealer.Value);
+        }
+
+        [Test]
+        public void BoolPropertyWithSpecificInitialValue_ShouldHaveInitialValue()
+        {
+            // Arrange
+            var myDataClass = new TableData();
+
+            // Assert
+            Assert.IsFalse(myDataClass.IsOffline.Value);
         }
 
         [Test]

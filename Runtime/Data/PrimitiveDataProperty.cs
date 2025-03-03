@@ -2,7 +2,7 @@
 
 namespace FusionGame.Core.Data
 {
-    public class AtomicDataProperty<T> : IAtomicDataProperty<T>
+    public class PrimitiveDataProperty<T> : IPrimitiveDataProperty<T> where T : struct
     {
         public bool HasSet { get; private set; }
 
@@ -24,7 +24,7 @@ namespace FusionGame.Core.Data
             }
         }
 
-        public AtomicDataProperty(T initialValue = default)
+        public PrimitiveDataProperty(T initialValue = default)
         {
             value = initialValue;
         }

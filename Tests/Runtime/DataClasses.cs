@@ -1,43 +1,51 @@
 using System.Collections.Generic;
+using Assets.FusionGame.Core.Runtime.Data;
 using FusionGame.Core.Data;
 
 namespace FusionGame.Core.RuntimeTests
 {
-    public class UserData
+    public class UserData : IUserData
     {
         public string Name { get; set; } = "Default User Name";
         public int Age { get; set; } = 0;
         public List<string> FavouriteFoods { get; set; } = new List<string>();
     }
 
+    public interface IUserData
+    {
+        string Name { get; }
+        int Age { get; }
+        List<string> FavouriteFoods { get; }
+    }
+
     public interface ITableData
     {
-        IAtomicDataProperty<int> TableId { get; }
-        IAtomicDataProperty<int> BettingTimeInSecond { get; }
-        IAtomicDataProperty<string> TableName { get; }
-        IAtomicDataProperty<string> TableTitle { get; }
-        IAtomicDataProperty<bool> IsLiveDealer { get; }
-        IAtomicDataProperty<bool> IsOffline { get; }
-
+        IPrimitiveDataProperty<int> TableId { get; }
+        IPrimitiveDataProperty<int> BettingTimeInSecond { get; }
+        IStringDataProperty TableName { get; }
+        IStringDataProperty TableTitle { get; }
+        IPrimitiveDataProperty<bool> IsLiveDealer { get; }
+        IPrimitiveDataProperty<bool> IsOffline { get; }
         IComplexDataProperty<UserData> User { get; }
+        //TODO: see how to access User with interface so that it doesn't allow modifying the user
     }
 
     public class TableData : ITableData
     {
-        public readonly AtomicDataProperty<int> PropertyTableId = new AtomicDataProperty<int>();
-        public readonly AtomicDataProperty<int> PropertyBettingTimeInSecond = new AtomicDataProperty<int>(5);
-        public readonly AtomicDataProperty<string> PropertyTableName = new AtomicDataProperty<string>();
-        public readonly AtomicDataProperty<string> PropertyTableTitle = new AtomicDataProperty<string>("Initial Value");
-        public readonly AtomicDataProperty<bool> PropertyIsOffline = new AtomicDataProperty<bool>();
-        public readonly AtomicDataProperty<bool> PropertyIsLiveDealer = new AtomicDataProperty<bool>(true);
-
+        public readonly PrimitiveDataProperty<int> PropertyTableId = new PrimitiveDataProperty<int>();
+        public readonly PrimitiveDataProperty<int> PropertyBettingTimeInSecond = new PrimitiveDataProperty<int>(5);
+        public readonly StringDataProperty PropertyTableName = new StringDataProperty();
+        public readonly StringDataProperty PropertyTableTitle = new StringDataProperty("Initial table title");
+        public readonly PrimitiveDataProperty<bool> PropertyIsOffline = new PrimitiveDataProperty<bool>();
+        public readonly PrimitiveDataProperty<bool> PropertyIsLiveDealer = new PrimitiveDataProperty<bool>(true);
         public readonly ComplexDataProperty<UserData> PropertyUser = new ComplexDataProperty<UserData>(new UserData());
-        public IAtomicDataProperty<int> TableId => PropertyTableId;
-        public IAtomicDataProperty<int> BettingTimeInSecond => PropertyBettingTimeInSecond;
-        public IAtomicDataProperty<string> TableName => PropertyTableName;
-        public IAtomicDataProperty<string> TableTitle => PropertyTableTitle;
-        public IAtomicDataProperty<bool> IsLiveDealer => PropertyIsLiveDealer;
-        public IAtomicDataProperty<bool> IsOffline => PropertyIsOffline;
+
+        public IPrimitiveDataProperty<int> TableId => PropertyTableId;
+        public IPrimitiveDataProperty<int> BettingTimeInSecond => PropertyBettingTimeInSecond;
+        public IStringDataProperty TableName => PropertyTableName;
+        public IStringDataProperty TableTitle => PropertyTableTitle;
+        public IPrimitiveDataProperty<bool> IsLiveDealer => PropertyIsLiveDealer;
+        public IPrimitiveDataProperty<bool> IsOffline => PropertyIsOffline;
         public IComplexDataProperty<UserData> User => PropertyUser;
     }
 }
