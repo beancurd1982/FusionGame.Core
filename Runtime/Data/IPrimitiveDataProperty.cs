@@ -2,7 +2,7 @@
 
 namespace FusionGame.Core.Data
 {
-    public interface IAtomicDataProperty<T>
+    public interface IPrimitiveDataProperty<T> where T : struct
     {
         bool HasSet { get; }
 
