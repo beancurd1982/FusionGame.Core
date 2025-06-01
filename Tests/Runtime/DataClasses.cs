@@ -18,6 +18,13 @@ namespace FusionGame.Core.RuntimeTests
         List<string> FavouriteFoods { get; }
     }
 
+    public interface IReadOnlyUserData
+    {
+        string Name { get; }
+        int Age { get; }
+        List<string> FavouriteFoods { get; }
+    }
+
     public interface ITableData
     {
         IPrimitiveDataProperty<int> TableId { get; }
@@ -26,7 +33,8 @@ namespace FusionGame.Core.RuntimeTests
         IStringDataProperty TableTitle { get; }
         IPrimitiveDataProperty<bool> IsLiveDealer { get; }
         IPrimitiveDataProperty<bool> IsOffline { get; }
-        IComplexDataProperty<UserData> User { get; }
+        //internal IComplexDataProperty<UserData> User { get; }
+        IComplexDataProperty<IReadOnlyUserData> ReadOnlyUser { get; }
         //TODO: see how to access User with interface so that it doesn't allow modifying the user
     }
 
@@ -46,6 +54,6 @@ namespace FusionGame.Core.RuntimeTests
         public IStringDataProperty TableTitle => PropertyTableTitle;
         public IPrimitiveDataProperty<bool> IsLiveDealer => PropertyIsLiveDealer;
         public IPrimitiveDataProperty<bool> IsOffline => PropertyIsOffline;
-        public IComplexDataProperty<UserData> User => PropertyUser;
+        public IComplexDataProperty<IReadOnlyUserData> ReadOnlyUser => PropertyUser as IComplexDataProperty<IReadOnlyUserData>;
     }
 }

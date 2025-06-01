@@ -105,7 +105,7 @@ namespace FusionGame.Core.RuntimeTests
             var simpleData = new TableData();
 
             // Act
-            var userData = simpleData.User.Value;
+            var userData = simpleData.PropertyUser.Value;
 
             // Assert
             Assert.AreEqual("Default User Name", userData.Name);
@@ -140,21 +140,21 @@ namespace FusionGame.Core.RuntimeTests
             changeList.AppendChange(nameof(UserData.FavouriteFoods), new List<string> { "Sushi", "Tacos" });
 
             var iSimpleData = (ITableData)simpleData;
-            iSimpleData.User.OnPropertyChanged += (propertyName) =>
+            iSimpleData.ReadOnlyUser.OnPropertyChanged += (propertyName) =>
             {
                 switch (propertyName)
                 {
                     case nameof(UserData.Name):
-                        Assert.AreEqual("Updated User", iSimpleData.User.Value.Name);
+                        Assert.AreEqual("Updated User", iSimpleData.ReadOnlyUser.Value.Name);
                         break;
                     case nameof(UserData.Age):
-                        Assert.AreEqual(30, iSimpleData.User.Value.Age);
+                        Assert.AreEqual(30, iSimpleData.ReadOnlyUser.Value.Age);
                         break;
                     case nameof(UserData.FavouriteFoods):
-                        Assert.IsNotNull(iSimpleData.User.Value.FavouriteFoods);
-                        Assert.AreEqual(2, iSimpleData.User.Value.FavouriteFoods.Count);
-                        Assert.Contains("Sushi", iSimpleData.User.Value.FavouriteFoods);
-                        Assert.Contains("Tacos", iSimpleData.User.Value.FavouriteFoods);
+                        Assert.IsNotNull(iSimpleData.ReadOnlyUser.Value.FavouriteFoods);
+                        Assert.AreEqual(2, iSimpleData.ReadOnlyUser.Value.FavouriteFoods.Count);
+                        Assert.Contains("Sushi", iSimpleData.ReadOnlyUser.Value.FavouriteFoods);
+                        Assert.Contains("Tacos", iSimpleData.ReadOnlyUser.Value.FavouriteFoods);
                         break;
                 }
             };
@@ -165,13 +165,15 @@ namespace FusionGame.Core.RuntimeTests
             // Assert
             Assert.IsTrue(result);
             Assert.IsEmpty(error);
-            var userData = simpleData.User.Value;
+            var userData = simpleData.ReadOnlyUser.Value;
             Assert.AreEqual("Updated User", userData.Name);
             Assert.AreEqual(30, userData.Age);
             Assert.IsNotNull(userData.FavouriteFoods);
             Assert.AreEqual(2, userData.FavouriteFoods.Count);
             Assert.Contains("Sushi", userData.FavouriteFoods);
             Assert.Contains("Tacos", userData.FavouriteFoods);
+
+            //iSimpleData.ReadOnlyUser.Value.FavouriteFoods.add
         }
 
         [Test]
