@@ -14,9 +14,9 @@ namespace Assets.FusionGame.Core.Runtime.Data
 
     interface IMyData: IDestroyable<IMyData>
     {
-        IGetValue<EnumSex> Sex { get; }
-        IGetValue<int> Year { get; }
-        IGetValue<float> Price { get; }
+        IGetValueStrong<EnumSex> Sex { get; }
+        IGetValueStrong<int> Year { get; }
+        IGetValueStrong<float> Price { get; }
         IGetValue<IReadOnlyList<int>> BetPositions { get; }
         IGetValue<IReadOnlyDictionary<int, string>> StudentsMap { get; }
         IGetValue<IReadOnlyCollection<string>> Fruits { get; }
@@ -25,16 +25,16 @@ namespace Assets.FusionGame.Core.Runtime.Data
 
     interface IConfig
     {
-        IGetValue<int> Time { get; }
-        IGetValue<bool> IsLiveDealer { get; }
+        IGetValueStrong<int> Time { get; }
+        IGetValueStrong<bool> IsLiveDealer { get; }
         IGetValue<IReadOnlyList<uint>> ConnectedCentralDisplayIds { get; }
     }
 
     class MyData : IMyData
     {
-        IGetValue<EnumSex> IMyData.Sex => DataPropertySex;
-        IGetValue<int> IMyData.Year => DataPropertyYear;
-        IGetValue<float> IMyData.Price => DataPropertyPrice;
+        IGetValueStrong<EnumSex> IMyData.Sex => DataPropertySex;
+        IGetValueStrong<int> IMyData.Year => DataPropertyYear;
+        IGetValueStrong<float> IMyData.Price => DataPropertyPrice;
         IGetValue<IReadOnlyList<int>> IMyData.BetPositions => DataPropertyBetPositions;
         IGetValue<IReadOnlyDictionary<int, string>> IMyData.StudentsMap => DataPropertyStudentsMap;
         IGetValue<IReadOnlyCollection<string>> IMyData.Fruits => DataPropertyFruits;
@@ -58,8 +58,8 @@ namespace Assets.FusionGame.Core.Runtime.Data
 
     class Config : IConfig
     {
-        IGetValue<int> IConfig.Time => DataPropertyTime;
-        IGetValue<bool> IConfig.IsLiveDealer => DataPropertyIsLiveDealer;
+        IGetValueStrong<int> IConfig.Time => DataPropertyTime;
+        IGetValueStrong<bool> IConfig.IsLiveDealer => DataPropertyIsLiveDealer;
         IGetValue<IReadOnlyList<uint>> IConfig.ConnectedCentralDisplayIds => DataPropertyConnectedCentralDisplayIds;
 
         public IntValue DataPropertyTime { get; } = new IntValue();
@@ -171,17 +171,17 @@ namespace Assets.FusionGame.Core.Runtime.Data
             data.OnBeforeDestroy -= OnBeforeDataDestroy;
         }
 
-        private static void OnSexValueChanged(EnumSex value)
+        private static void OnSexValueChanged(bool firstTimeSet, EnumSex oldValue, EnumSex value)
         {
             Debug.Log($"Sex changed to: {value}");
         }
 
-        private static void OnYearValueChanged(int value)
+        private static void OnYearValueChanged(bool firstTimeSet, int oldValue, int value)
         {
             Debug.Log($"Year changed to: {value}");
         }
 
-        private static void OnPriceValueChanged(float value)
+        private static void OnPriceValueChanged(bool firstTimeSet, float oldValue, float value)
         {
             Debug.Log($"Price changed to: {value}");
         }
@@ -201,12 +201,12 @@ namespace Assets.FusionGame.Core.Runtime.Data
             Debug.Log($"Fruits changed to: {string.Join(", ", value)}");
         }
 
-        private static void OnTimerValueChanged(int value)
+        private static void OnTimerValueChanged(bool firstTimeSet, int oldValue, int value)
         {
             Debug.Log($"Config Time changed to: {value}");
         }
 
-        private static void OnIsLiveDealerValueChanged(bool value)
+        private static void OnIsLiveDealerValueChanged(bool firstTimeSet, bool oldValue, bool value)
         {
             Debug.Log($"Config IsLiveDealer changed to: {value}");
         }
