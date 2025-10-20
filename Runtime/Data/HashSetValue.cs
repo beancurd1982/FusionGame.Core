@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    class HashSetValue<T> : IGetValue<IReadOnlyCollection<T>>, IHasSet, ICollection<T>
+    public class HashSetValue<T> : IGetValue<IReadOnlyCollection<T>>, IHasSet, ICollection<T>
     {
         private readonly HashSet<T> _internalSet = new HashSet<T>();
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    class DictionaryValue<TKey, TValue> : IGetValue<IReadOnlyDictionary<TKey, TValue>>, IHasSet, IDictionary<TKey, TValue>
+    public class DictionaryValue<TKey, TValue> : IGetValue<IReadOnlyDictionary<TKey, TValue>>, IHasSet, IDictionary<TKey, TValue>
     {
         private readonly Dictionary<TKey, TValue> _internalDictionary = new Dictionary<TKey, TValue>();
 

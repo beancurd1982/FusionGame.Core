@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    class ListValue<T> : IGetValue<IReadOnlyList<T>>, IHasSet, IList<T>
+    public class ListValue<T> : IGetValue<IReadOnlyList<T>>, IHasSet, IList<T>
     {
         private readonly List<T> _internalList = new List<T>();
 

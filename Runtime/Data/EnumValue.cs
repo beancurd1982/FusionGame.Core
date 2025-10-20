@@ -1,21 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    class IntValue : IGetValueStrong<int>, ISetValue<int>, IHasSet
+    public class EnumValue<T> : IGetValueStrong<T>, ISetValue<T>, IHasSet where T : struct, Enum
     {
         public bool HasSet { get; private set; }
-        public int Value { get; private set; }
+        public T Value { get; private set; }
 
-        public Action<bool, int, int> OnValueChanged { get; set; }
+        public Action<bool, T, T> OnValueChanged { get; set; }
 
-        public void SetValue(int value)
+        public void SetValue(T value)
         {
             var wasSet = HasSet;
             HasSet = true;
 
             var oldValue = Value;
-            var changed = value != Value;
+            var changed = !EqualityComparer<T>.Default.Equals(Value, value);
             Value = value;
 
             if (!wasSet || changed)
@@ -24,7 +25,7 @@ namespace Assets.FusionGame.Core.Runtime.Data
             }
         }
 
-        public IntValue(int initialValue = 0)
+        public EnumValue(T initialValue = default)
         {
             Value = initialValue;
             HasSet = false;

@@ -2,29 +2,29 @@
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    interface IDestroyable<T>
+    public interface IDestroyable<T>
     {
         void Destroy();
         Action<T> OnBeforeDestroy { get; set; }
     }
 
-    interface IHasSet
+    public interface IHasSet
     {
         bool HasSet { get; }
     }
 
-    interface ISetValue<in T> //where T : struct
+    public interface ISetValue<in T> //where T : struct
     {
         void SetValue(T value);
     }
 
-    interface IGetValue<T> //where T : struct
+    public interface IGetValue<T> //where T : struct
     {
         T Value { get; }
         Action<T> OnValueChanged { get; set; }
     }
 
-    interface IGetValueStrong<T> where T : struct
+    public interface IGetValueStrong<T> where T : struct
     {
         T Value { get; }
 
