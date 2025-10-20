@@ -1,7 +1,7 @@
 {
   "name": "com.fusiongame.core",
   "displayName": "FusionGame.Core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "unity": "2020.3",
   "description": "The core package for buidling fusion games",
   "keywords": [
