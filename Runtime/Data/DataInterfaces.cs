@@ -18,13 +18,13 @@ namespace Assets.FusionGame.Core.Runtime.Data
         void SetValue(T value);
     }
 
-    public interface IGetValue<T> //where T : struct
-    {
-        T Value { get; }
-        Action<T> OnValueChanged { get; set; }
-    }
+    // public interface IGetValue<T> //where T : struct
+    // {
+    //     T Value { get; }
+    //     Action<T> OnValueChanged { get; set; }
+    // }
 
-    public interface IGetValueStrong<T> where T : struct
+    public interface IGetValue<T>// where T : struct
     {
         T Value { get; }
 

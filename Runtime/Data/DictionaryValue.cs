@@ -12,55 +12,42 @@ namespace Assets.FusionGame.Core.Runtime.Data
 
         public IReadOnlyDictionary<TKey, TValue> Value => _internalDictionary;
 
-        public Action<IReadOnlyDictionary<TKey, TValue>> OnValueChanged { get; set; }
+        public Action<bool, IReadOnlyDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>> OnValueChanged { get; set; }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            return _internalDictionary.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _internalDictionary.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public void Add(TKey key, TValue value)
         {
+            var oldValue = new Dictionary<TKey, TValue>(_internalDictionary);
             _internalDictionary.Add(key, value);
-            NotifyChanged();
+            NotifyChanged(oldValue);
         }
 
-        public bool ContainsKey(TKey key)
-        {
-            return _internalDictionary.ContainsKey(key);
-        }
+        public bool ContainsKey(TKey key) => _internalDictionary.ContainsKey(key);
 
         public bool Remove(TKey key)
         {
+            if (!_internalDictionary.ContainsKey(key)) return false;
+            var oldValue = new Dictionary<TKey, TValue>(_internalDictionary);
             var removed = _internalDictionary.Remove(key);
-            if (removed)
-            {
-                NotifyChanged();
-            }
+            if (removed) NotifyChanged(oldValue);
             return removed;
         }
 
-        public bool TryGetValue(TKey key, out TValue value)
-        {
-            return _internalDictionary.TryGetValue(key, out value);
-        }
+        public bool TryGetValue(TKey key, out TValue value) => _internalDictionary.TryGetValue(key, out value);
 
         public TValue this[TKey key]
         {
             get => _internalDictionary[key];
             set
             {
-                var exists = _internalDictionary.TryGetValue(key, out var oldValue);
-                if (exists && EqualityComparer<TValue>.Default.Equals(oldValue, value))
+                var exists = _internalDictionary.TryGetValue(key, out var oldItem);
+                if (exists && EqualityComparer<TValue>.Default.Equals(oldItem, value))
                     return;
-
+                var oldValue = new Dictionary<TKey, TValue>(_internalDictionary);
                 _internalDictionary[key] = value;
-                NotifyChanged();
+                NotifyChanged(oldValue);
             }
         }
 
@@ -69,47 +56,40 @@ namespace Assets.FusionGame.Core.Runtime.Data
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
+            var oldValue = new Dictionary<TKey, TValue>(_internalDictionary);
             ((IDictionary<TKey, TValue>)_internalDictionary).Add(item);
-            NotifyChanged();
+            NotifyChanged(oldValue);
         }
 
         public void Clear()
         {
-            var wasEmpty = _internalDictionary.Count == 0;
+            if (_internalDictionary.Count == 0) return;
+            var oldValue = new Dictionary<TKey, TValue>(_internalDictionary);
             _internalDictionary.Clear();
-            if (!wasEmpty)
-            {
-                NotifyChanged();
-            }
+            NotifyChanged(oldValue);
         }
 
-        public bool Contains(KeyValuePair<TKey, TValue> item)
-        {
-            return ((IDictionary<TKey, TValue>)_internalDictionary).Contains(item);
-        }
+        public bool Contains(KeyValuePair<TKey, TValue> item) => ((IDictionary<TKey, TValue>)_internalDictionary).Contains(item);
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
-        {
-            ((IDictionary<TKey, TValue>)_internalDictionary).CopyTo(array, arrayIndex);
-        }
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => ((IDictionary<TKey, TValue>)_internalDictionary).CopyTo(array, arrayIndex);
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
+            if (!((IDictionary<TKey, TValue>)_internalDictionary).Contains(item)) return false;
+            var oldValue = new Dictionary<TKey, TValue>(_internalDictionary);
             var removed = ((IDictionary<TKey, TValue>)_internalDictionary).Remove(item);
-            if (removed)
-            {
-                NotifyChanged();
-            }
+            if (removed) NotifyChanged(oldValue);
             return removed;
         }
 
         public int Count => _internalDictionary.Count;
         public bool IsReadOnly => false;
 
-        private void NotifyChanged()
+        private void NotifyChanged(IReadOnlyDictionary<TKey, TValue> oldValue)
         {
+            var isFirstSet = !HasSet;
             HasSet = true;
-            OnValueChanged?.Invoke(_internalDictionary);
+            OnValueChanged?.Invoke(isFirstSet, oldValue, new Dictionary<TKey, TValue>(_internalDictionary));
         }
     }
 }

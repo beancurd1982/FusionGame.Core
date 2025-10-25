@@ -1,21 +1,21 @@
-﻿using System;
+using System;
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    public class FloatValue : IGetValue<float>, ISetValue<float>, IHasSet
+    public class StringValue : IGetValue<string>, ISetValue<string>, IHasSet
     {
         public bool HasSet { get; private set; }
-        public float Value { get; private set; }
+        public string Value { get; private set; }
 
-        public Action<bool, float, float> OnValueChanged { get; set; }
+        public Action<bool, string, string> OnValueChanged { get; set; }
 
-        public void SetValue(float value)
+        public void SetValue(string value)
         {
             var wasSet = HasSet;
             HasSet = true;
 
             var oldValue = Value;
-            var changed = Math.Abs(value - Value) > float.Epsilon;
+            var changed = value != Value;
             Value = value;
 
             if (!wasSet || changed)
@@ -24,7 +24,7 @@ namespace Assets.FusionGame.Core.Runtime.Data
             }
         }
 
-        public FloatValue(float initialValue = 0.0f)
+        public StringValue(string initialValue = null)
         {
             Value = initialValue;
             HasSet = false;

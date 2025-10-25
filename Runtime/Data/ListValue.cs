@@ -12,73 +12,54 @@ namespace Assets.FusionGame.Core.Runtime.Data
 
         public IReadOnlyList<T> Value => _internalList;
 
-        public Action<IReadOnlyList<T>> OnValueChanged { get; set; }
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _internalList.GetEnumerator();
-        }
+        public Action<bool, IReadOnlyList<T>, IReadOnlyList<T>> OnValueChanged { get; set; }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => _internalList.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public void Add(T item)
         {
+            var oldValue = new List<T>(_internalList).AsReadOnly();
             _internalList.Add(item);
-            NotifyChanged();
+            NotifyChanged(oldValue);
         }
 
         public void Clear()
         {
-            var wasEmpty = _internalList.Count == 0;
+            if (_internalList.Count == 0) return;
+            var oldValue = new List<T>(_internalList).AsReadOnly();
             _internalList.Clear();
-
-            if (!wasEmpty)
-            {
-                NotifyChanged();
-            }
+            NotifyChanged(oldValue);
         }
 
-        public bool Contains(T item)
-        {
-            return _internalList.Contains(item);
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            _internalList.CopyTo(array, arrayIndex);
-        }
+        public bool Contains(T item) => _internalList.Contains(item);
+        public void CopyTo(T[] array, int arrayIndex) => _internalList.CopyTo(array, arrayIndex);
 
         public bool Remove(T item)
         {
+            if (!_internalList.Contains(item)) return false;
+            var oldValue = new List<T>(_internalList).AsReadOnly();
             var removed = _internalList.Remove(item);
-
-            if (removed)
-            {
-                NotifyChanged();
-            }
-
+            if (removed) NotifyChanged(oldValue);
             return removed;
         }
 
         public int Count => _internalList.Count;
         public bool IsReadOnly => false;
-        public int IndexOf(T item)
-        {
-            return _internalList.IndexOf(item);
-        }
+        public int IndexOf(T item) => _internalList.IndexOf(item);
 
         public void Insert(int index, T item)
         {
+            var oldValue = new List<T>(_internalList).AsReadOnly();
             _internalList.Insert(index, item);
-            NotifyChanged();
+            NotifyChanged(oldValue);
         }
 
         public void RemoveAt(int index)
         {
+            var oldValue = new List<T>(_internalList).AsReadOnly();
             _internalList.RemoveAt(index);
-            NotifyChanged();
+            NotifyChanged(oldValue);
         }
 
         public T this[int index]
@@ -87,16 +68,17 @@ namespace Assets.FusionGame.Core.Runtime.Data
             set
             {
                 if (EqualityComparer<T>.Default.Equals(_internalList[index], value)) return;
-
+                var oldValue = new List<T>(_internalList).AsReadOnly();
                 _internalList[index] = value;
-                NotifyChanged();
+                NotifyChanged(oldValue);
             }
         }
 
-        private void NotifyChanged()
+        private void NotifyChanged(IReadOnlyList<T> oldValue)
         {
+            var isFirstSet = !HasSet;
             HasSet = true;
-            OnValueChanged?.Invoke(_internalList);
+            OnValueChanged?.Invoke(isFirstSet, oldValue, _internalList.AsReadOnly());
         }
     }
 }

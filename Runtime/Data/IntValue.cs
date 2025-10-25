@@ -2,7 +2,7 @@
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    public class IntValue : IGetValueStrong<int>, ISetValue<int>, IHasSet
+    public class IntValue : IGetValue<int>, ISetValue<int>, IHasSet
     {
         public bool HasSet { get; private set; }
         public int Value { get; private set; }

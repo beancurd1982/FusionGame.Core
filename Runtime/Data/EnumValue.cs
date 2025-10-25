@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assets.FusionGame.Core.Runtime.Data
 {
-    public class EnumValue<T> : IGetValueStrong<T>, ISetValue<T>, IHasSet where T : struct, Enum
+    public class EnumValue<T> : IGetValue<T>, ISetValue<T>, IHasSet where T : struct, Enum
     {
         public bool HasSet { get; private set; }
         public T Value { get; private set; }

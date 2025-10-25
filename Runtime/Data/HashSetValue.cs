@@ -12,64 +12,48 @@ namespace Assets.FusionGame.Core.Runtime.Data
 
         public IReadOnlyCollection<T> Value => _internalSet;
 
-        public Action<IReadOnlyCollection<T>> OnValueChanged { get; set; }
+        public Action<bool, IReadOnlyCollection<T>, IReadOnlyCollection<T>> OnValueChanged { get; set; }
 
         public int Count => _internalSet.Count;
         public bool IsReadOnly => false;
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _internalSet.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => _internalSet.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public void Add(T item)
         {
-            var added = _internalSet.Add(item);
-            if (added)
-            {
-                NotifyChanged();
-            }
+            if (_internalSet.Contains(item)) return;
+            var oldValue = new HashSet<T>(_internalSet);
+            _internalSet.Add(item);
+            NotifyChanged(oldValue);
         }
 
         public void Clear()
         {
-            var wasEmpty = _internalSet.Count == 0;
+            if (_internalSet.Count == 0) return;
+            var oldValue = new HashSet<T>(_internalSet);
             _internalSet.Clear();
-            if (!wasEmpty)
-            {
-                NotifyChanged();
-            }
+            NotifyChanged(oldValue);
         }
 
-        public bool Contains(T item)
-        {
-            return _internalSet.Contains(item);
-        }
+        public bool Contains(T item) => _internalSet.Contains(item);
 
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            _internalSet.CopyTo(array, arrayIndex);
-        }
+        public void CopyTo(T[] array, int arrayIndex) => _internalSet.CopyTo(array, arrayIndex);
 
         public bool Remove(T item)
         {
+            if (!_internalSet.Contains(item)) return false;
+            var oldValue = new HashSet<T>(_internalSet);
             var removed = _internalSet.Remove(item);
-            if (removed)
-            {
-                NotifyChanged();
-            }
+            if (removed) NotifyChanged(oldValue);
             return removed;
         }
 
-        private void NotifyChanged()
+        private void NotifyChanged(IReadOnlyCollection<T> oldValue)
         {
+            var isFirstSet = !HasSet;
             HasSet = true;
-            OnValueChanged?.Invoke(_internalSet);
+            OnValueChanged?.Invoke(isFirstSet, oldValue, new HashSet<T>(_internalSet));
         }
     }
 }
