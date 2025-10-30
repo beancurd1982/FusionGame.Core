@@ -1,6 +1,7 @@
 ﻿using System;
+using FusionGame.Core.Utils;
 
-namespace Assets.FusionGame.Core.Runtime.Data
+namespace FusionGame.Core.Data
 {
     public class IntValue : IGetValue<int>, ISetValue<int>, IHasSet
     {
@@ -12,15 +13,18 @@ namespace Assets.FusionGame.Core.Runtime.Data
         public void SetValue(int value)
         {
             var wasSet = HasSet;
+            var oldValue = Value;
             HasSet = true;
 
-            var oldValue = Value;
             var changed = value != Value;
             Value = value;
 
             if (!wasSet || changed)
             {
-                OnValueChanged?.Invoke(!wasSet, oldValue, value);
+                var first = !wasSet;
+                var newValue = value; // capture for closure
+                ValueChangeDispatcher.Enqueue(() =>
+                    OnValueChanged?.Invoke(first, oldValue, newValue));
             }
         }
 

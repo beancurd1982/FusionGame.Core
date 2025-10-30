@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using FusionGame.Core.Utils;
 
-namespace Assets.FusionGame.Core.Runtime.Data
+namespace FusionGame.Core.Data
 {
     public class DictionaryValue<TKey, TValue> : IGetValue<IReadOnlyDictionary<TKey, TValue>>, IHasSet, IDictionary<TKey, TValue>
     {
@@ -89,7 +90,9 @@ namespace Assets.FusionGame.Core.Runtime.Data
         {
             var isFirstSet = !HasSet;
             HasSet = true;
-            OnValueChanged?.Invoke(isFirstSet, oldValue, new Dictionary<TKey, TValue>(_internalDictionary));
+            var newValue = new Dictionary<TKey, TValue>(_internalDictionary);
+            ValueChangeDispatcher.Enqueue(() =>
+                OnValueChanged?.Invoke(isFirstSet, oldValue, newValue));
         }
     }
 }

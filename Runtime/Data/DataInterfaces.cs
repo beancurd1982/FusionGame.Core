@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.FusionGame.Core.Runtime.Data
+namespace FusionGame.Core.Data
 {
     public interface IDestroyable<T>
     {
@@ -13,18 +13,12 @@ namespace Assets.FusionGame.Core.Runtime.Data
         bool HasSet { get; }
     }
 
-    public interface ISetValue<in T> //where T : struct
+    public interface ISetValue<in T>
     {
         void SetValue(T value);
     }
 
-    // public interface IGetValue<T> //where T : struct
-    // {
-    //     T Value { get; }
-    //     Action<T> OnValueChanged { get; set; }
-    // }
-
-    public interface IGetValue<T>// where T : struct
+    public interface IGetValue<T>
     {
         T Value { get; }
 

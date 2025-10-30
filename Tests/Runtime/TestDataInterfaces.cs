@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.FusionGame.Core.Runtime.Data;
+using FusionGame.Core.Data;
 using UnityEngine;
 using NUnit.Framework;
 using UnityEngine.TestTools;

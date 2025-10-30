@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using FusionGame.Core.Utils;
 
-namespace Assets.FusionGame.Core.Runtime.Data
+namespace FusionGame.Core.Data
 {
     public class EnumValue<T> : IGetValue<T>, ISetValue<T>, IHasSet where T : struct, Enum
     {
@@ -13,15 +14,19 @@ namespace Assets.FusionGame.Core.Runtime.Data
         public void SetValue(T value)
         {
             var wasSet = HasSet;
+            var oldValue = Value;
+
             HasSet = true;
 
-            var oldValue = Value;
             var changed = !EqualityComparer<T>.Default.Equals(Value, value);
             Value = value;
 
             if (!wasSet || changed)
             {
-                OnValueChanged?.Invoke(!wasSet, oldValue, value);
+                var first = !wasSet;
+                var newValue = value; // capture
+                ValueChangeDispatcher.Enqueue(() =>
+                    OnValueChanged?.Invoke(first, oldValue, newValue));
             }
         }
 

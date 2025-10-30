@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using FusionGame.Core.Utils;
 
-namespace Assets.FusionGame.Core.Runtime.Data
+namespace FusionGame.Core.Data
 {
     public class HashSetValue<T> : IGetValue<IReadOnlyCollection<T>>, IHasSet, ICollection<T>
     {
@@ -23,7 +24,7 @@ namespace Assets.FusionGame.Core.Runtime.Data
         public void Add(T item)
         {
             if (_internalSet.Contains(item)) return;
-            var oldValue = new HashSet<T>(_internalSet);
+            var oldValue = Snapshot();
             _internalSet.Add(item);
             NotifyChanged(oldValue);
         }
@@ -31,7 +32,7 @@ namespace Assets.FusionGame.Core.Runtime.Data
         public void Clear()
         {
             if (_internalSet.Count == 0) return;
-            var oldValue = new HashSet<T>(_internalSet);
+            var oldValue = Snapshot();
             _internalSet.Clear();
             NotifyChanged(oldValue);
         }
@@ -43,17 +44,22 @@ namespace Assets.FusionGame.Core.Runtime.Data
         public bool Remove(T item)
         {
             if (!_internalSet.Contains(item)) return false;
-            var oldValue = new HashSet<T>(_internalSet);
+            var oldValue = Snapshot();
             var removed = _internalSet.Remove(item);
             if (removed) NotifyChanged(oldValue);
             return removed;
         }
 
+        private IReadOnlyCollection<T> Snapshot() => new HashSet<T>(_internalSet);
+
         private void NotifyChanged(IReadOnlyCollection<T> oldValue)
         {
             var isFirstSet = !HasSet;
             HasSet = true;
-            OnValueChanged?.Invoke(isFirstSet, oldValue, new HashSet<T>(_internalSet));
+
+            var newValue = Snapshot(); // capture for deferred invoke
+            ValueChangeDispatcher.Enqueue(() =>
+                OnValueChanged?.Invoke(isFirstSet, oldValue, newValue));
         }
     }
 }
